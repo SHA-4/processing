@@ -1,6 +1,7 @@
 import os
 import subprocess
 
+# TODO - add separate message if code changed in commit or not
 # TODO - save the seed to a file, commit the changes each save
 # TODO - make an images directory if it doesn't exist
 # Useful to set up a saving infrastructure
