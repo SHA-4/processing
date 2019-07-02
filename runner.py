@@ -32,6 +32,18 @@ class Runner(object):
                 
         return string_i
     
+    def commit_changes(self, last_number_saved):
+        runner_path = os.path.dirname(__file__)
+        script_path = "{}/handle_commit.sh".format(runner_path)
+        pluralization = '' if self.desired == 1 else 's'
+        commit_message = "{} file{} generated".format(self.desired, pluralization)
+
+        if self.desired == 1:
+            commit_message += ", {}".format(last_number_saved)
+        elif self.desired > 0:
+            commit_message += ", from {} to {}".format(self.get_padded_number(self.file_number + 1), last_number_saved)
+        subprocess.call([script_path, commit_message])
+
     def handle_save(self):
         # Because sketchPath("") returns /Applications/ when outside draw() function
         if self.file_number is None:
@@ -47,10 +59,5 @@ class Runner(object):
         if self.current_run > self.desired:
             noLoop()
 
-        # handle commit
-        runner_path = os.path.dirname(__file__)
-        commit_path = "{}/handle_commit.sh".format(runner_path)
-        commit_message = "{} files generated".format(self.desired)
-        if self.desired > 0:
-            commit_message += ", from {} to {}".format(self.get_padded_number(self.file_number + 1), padded_number)
-        subprocess.call([commit_path, commit_message])
+        last_number_saved = padded_number if self.desired > 0 else None
+        self.commit_changes(last_number_saved)
