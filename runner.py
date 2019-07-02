@@ -5,11 +5,17 @@ import os
 # (saving the seed, code, and photos)
 
 class Runner(object):
-    def __init__(self, desired):
+    def __init__(self, desired, size_multiplier = 1):
+        self.width = 540 * size_multiplier
+        self.height = 480 * size_multiplier
         self.desired = desired
         self.file_number = None
         self.current_run = 1
-        
+
+    def setup(self):
+        colorMode(HSB, 360, 100, 100, 1.0)
+        background(color(0, 0, 100, 0))
+
     def count_files(self):
         cwd = sketchPath("")
         dir_list = os.listdir(cwd + "images")
