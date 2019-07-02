@@ -1,5 +1,7 @@
 import os
+import subprocess
 
+# TODO - save the seed to a file, commit the changes each save
 # TODO - make an images directory if it doesn't exist
 # Useful to set up a saving infrastructure
 # (saving the seed, code, and photos)
@@ -35,7 +37,7 @@ class Runner(object):
         if self.file_number is None:
             self.file_number = self.count_files()
         
-        # save the file
+        # save the image
         if self.desired > 0:
             padded_number = self.get_padded_number(self.file_number + self.current_run) 
             saveFrame("images/try-{}.png".format(padded_number))
@@ -45,3 +47,10 @@ class Runner(object):
         if self.current_run > self.desired:
             noLoop()
 
+        # handle commit
+        runner_path = os.path.dirname(__file__)
+        commit_path = "{}/handle_commit.sh".format(runner_path)
+        commit_message = "{} files generated".format(self.desired)
+        if self.desired > 0:
+            commit_message += ", from {} to {}".format(self.get_padded_number(self.file_number + 1), padded_number)
+        subprocess.call([commit_path, commit_message])
