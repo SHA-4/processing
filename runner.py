@@ -58,6 +58,5 @@ class Runner(object):
         # stop drawing
         if self.current_run > self.desired:
             noLoop()
-
-        last_number_saved = padded_number if self.desired > 0 else None
-        self.commit_changes(last_number_saved)
+            last_number_saved = padded_number if self.desired > 0 else None
+            self.commit_changes(last_number_saved)
