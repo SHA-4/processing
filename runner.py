@@ -17,9 +17,12 @@ class Runner(object):
         self.file_number = None
         self.current_run = 1
 
+    def refresh(self):
+        background(color(0, 0, 100, 0))
+
     def setup(self):
         colorMode(HSB, 360, 100, 100, 1.0)
-        background(color(0, 0, 100, 0))
+        self.refresh()
 
     def count_files(self):
         cwd = sketchPath("")
