@@ -58,7 +58,7 @@ class Runner(object):
         # save the image
         if self.desired > 0:
             padded_number = self.get_padded_number(self.file_number + self.current_run) 
-            saveFrame("images/try-{}.png".format(padded_number))
+            saveFrame("images/{}.png".format(padded_number))
             self.current_run += 1
         
         # stop drawing
