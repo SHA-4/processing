@@ -10,13 +10,14 @@ import subprocess
 # (saving the seed, code, and photos)
 
 class Runner(object):
-    def __init__(self, desired, size_multiplier = 1):
+    def __init__(self, desired, size_multiplier = 1, open_on_save=False):
         self.width = 540 * size_multiplier
         self.height = 480 * size_multiplier
         self.desired = desired
         self.file_number = None
         self.current_run = 1
         self.saved_file_numbers = []
+        self.open_on_save = open_on_save
 
     def refresh(self):
         background(color(0, 0, 100, 0))
@@ -38,7 +39,10 @@ class Runner(object):
                 string_i = '0' + string_i
                 
         return string_i
-    
+
+    def get_image_name(self, padded_number):
+        return "images/{}.png".format(padded_number)
+
     def commit_changes(self):
         runner_path = os.path.dirname(__file__)
         script_path = "{}/handle_commit.sh".format(runner_path)
@@ -51,6 +55,14 @@ class Runner(object):
             commit_message += ", from {} to {}".format(self.saved_file_numbers[0], self.saved_file_numbers[-1])
         subprocess.call([script_path, commit_message])
 
+    def open_files(self):
+        command = 'open'
+        for file_number in self.saved_file_numbers:
+            file_name = self.get_image_name(file_number)
+            command += ' {}'.format(file_name)
+
+        os.system(command)
+
     def handle_save(self):
         # Because sketchPath("") returns /Applications/ when outside draw() function
         if self.file_number is None:
@@ -60,10 +72,14 @@ class Runner(object):
         if self.desired > 0:
             padded_number = self.get_padded_number(self.file_number + self.current_run) 
             self.saved_file_numbers.append(padded_number)
-            saveFrame("images/{}.png".format(padded_number))
+            saveFrame(self.get_image_name(padded_number))
             self.current_run += 1
         
         # stop drawing
         if self.current_run > self.desired:
             noLoop()
             self.commit_changes()
+
+            if self.open_on_save:
+                self.open_files()
+
