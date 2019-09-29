@@ -16,6 +16,7 @@ class Runner(object):
         self.desired = desired
         self.file_number = None
         self.current_run = 1
+        self.saved_file_numbers = []
 
     def refresh(self):
         background(color(0, 0, 100, 0))
@@ -38,16 +39,16 @@ class Runner(object):
                 
         return string_i
     
-    def commit_changes(self, last_number_saved):
+    def commit_changes(self):
         runner_path = os.path.dirname(__file__)
         script_path = "{}/handle_commit.sh".format(runner_path)
         pluralization = '' if self.desired == 1 else 's'
         commit_message = "{} file{} generated".format(self.desired, pluralization)
 
         if self.desired == 1:
-            commit_message += ", {}".format(last_number_saved)
+            commit_message += ", {}".format(self.saved_file_numbers[0])
         elif self.desired > 0:
-            commit_message += ", from {} to {}".format(self.get_padded_number(self.file_number + 1), last_number_saved)
+            commit_message += ", from {} to {}".format(self.saved_file_numbers[0], self.saved_file_numbers[-1])
         subprocess.call([script_path, commit_message])
 
     def handle_save(self):
@@ -58,11 +59,11 @@ class Runner(object):
         # save the image
         if self.desired > 0:
             padded_number = self.get_padded_number(self.file_number + self.current_run) 
+            self.saved_file_numbers.append(padded_number)
             saveFrame("images/{}.png".format(padded_number))
             self.current_run += 1
         
         # stop drawing
         if self.current_run > self.desired:
             noLoop()
-            last_number_saved = padded_number if self.desired > 0 else None
-            self.commit_changes(last_number_saved)
+            self.commit_changes()
