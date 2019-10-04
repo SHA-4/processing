@@ -3,11 +3,13 @@ import subprocess
 
 # TODO - add separate message if code changed in commit or not
 # TODO - save the seed to a file, commit the changes each save
-# TODO - make an images directory if it doesn't exist
 # TODO - see if I can call size in setup 
+# TODO - fix cwd calculation
 
 # Useful to set up a saving infrastructure
 # (saving the seed, code, and photos)
+
+IMAGE_FOLDER = "images"
 
 class Runner(object):
     def __init__(self, desired, size_multiplier = 1, open_on_save=False):
@@ -26,9 +28,12 @@ class Runner(object):
         colorMode(HSB, 360, 100, 100, 1.0)
         self.refresh()
 
+    @staticmethod
+    def get_cwd():
+        return sketchPath("") + '/'
+
     def count_files(self):
-        cwd = sketchPath("")
-        dir_list = os.listdir(cwd + "images")
+        dir_list = os.listdir(self.get_cwd() + IMAGE_FOLDER)
         return len(dir_list)
             
     def get_padded_number(self, i, power = 3):
@@ -41,7 +46,7 @@ class Runner(object):
         return string_i
 
     def get_image_name(self, padded_number):
-        return "images/{}.png".format(padded_number)
+        return "{}/{}.png".format(IMAGE_FOLDER, padded_number)
 
     def commit_changes(self):
         runner_path = os.path.dirname(__file__)
@@ -63,16 +68,26 @@ class Runner(object):
 
         os.system(command)
 
+    def make_directories(self):
+        if self.current_run == 1:
+            has_directory = os.path.exists(self.get_cwd() + IMAGE_FOLDER)
+            if not has_directory:
+                os.mkdir(IMAGE_FOLDER)
+
+    def save_image(self):
+        padded_number = self.get_padded_number(self.file_number + self.current_run) 
+        self.saved_file_numbers.append(padded_number)
+        saveFrame(self.get_image_name(padded_number))
+
     def handle_save(self):
-        # Because sketchPath("") returns /Applications/ when outside draw() function
+        self.make_directories()
+
         if self.file_number is None:
             self.file_number = self.count_files()
         
         # save the image
         if self.desired > 0:
-            padded_number = self.get_padded_number(self.file_number + self.current_run) 
-            self.saved_file_numbers.append(padded_number)
-            saveFrame(self.get_image_name(padded_number))
+            self.save_image()
             self.current_run += 1
         
         # stop drawing
