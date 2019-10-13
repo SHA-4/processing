@@ -98,3 +98,4 @@ class Runner(object):
             if self.open_on_save:
                 self.open_files()
 
+            exit()
