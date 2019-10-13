@@ -3,7 +3,7 @@ import subprocess
 
 # TODO - add separate message if code changed in commit or not
 # TODO - save the seed to a file, commit the changes each save
-# TODO - see if I can call size in setup 
+# TODO - https://processing.org/reference/settings_.html to call size in setup
 # TODO - fix cwd calculation
 
 # Useful to set up a saving infrastructure
