@@ -15,9 +15,6 @@ echo "Unable to stage files"
 exit 1
 fi
 
-echo "heyyy"
-echo $1
-echo "hey"
 git commit -m "$1"
 if (( $? )); then
 echo "Unable to commit"
