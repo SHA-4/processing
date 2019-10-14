@@ -1,14 +1,6 @@
 import os
 import subprocess
 
-# TODO - add separate message if code changed in commit or not
-# TODO - save the seed to a file, commit the changes each save
-# TODO - https://processing.org/reference/settings_.html to call size in setup
-# TODO - fix cwd calculation
-
-# Useful to set up a saving infrastructure
-# (saving the seed, code, and photos)
-
 IMAGE_FOLDER = "images"
 
 class Runner(object):
