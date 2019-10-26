@@ -9,7 +9,6 @@ You can use :make by specifying putting the following in `~.vim/ftplugin/pyde.vi
 ## Pending
 - Fix flash screen when running from command line
 - Add separate message if code changed in commit or not
-- Save the seed to a file, commit the changes each save
 - Call size in setup according to https://processing.org/reference/settings_.html
   * This is what parses setup: https://github.com/processing/processing/blob/349f413a3fb63a75e0b096097a5b0ba7f5565198/java/src/processing/mode/java/tweak/SketchParser.java
   * Test monkey patching setup in Runner
