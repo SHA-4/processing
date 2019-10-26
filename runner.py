@@ -2,6 +2,7 @@ import os
 import subprocess
 
 IMAGE_FOLDER = "images"
+INT_MAX = 2147483648
 
 class Runner(object):
     def __init__(self, desired, size_multiplier = 1, open_on_save=False):
@@ -12,12 +13,28 @@ class Runner(object):
         self.current_run = 1
         self.saved_file_numbers = []
         self.open_on_save = open_on_save
+        self.random_seed = None
+        self.noise_seed = None
 
     def refresh(self):
         background(color(0, 0, 100, 0))
 
+    def get_random_int(self):
+        return int(random(-1 * INT_MAX, INT_MAX))
+
+    def set_seeds(self):
+        random_seed = self.get_random_int()
+        self.random_seed = random_seed
+
+        noise_seed = self.get_random_int()
+        self.noise_seed = noise_seed
+
+        randomSeed(random_seed)
+        noiseSeed(noise_seed)
+
     def setup(self):
         colorMode(HSB, 360, 100, 100, 1.0)
+        self.set_seeds()
         self.refresh()
 
     @staticmethod
