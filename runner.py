@@ -7,11 +7,11 @@ INT_MAX = 2147483648
 class Runner(object):
     def __init__(self, desired, size_multiplier = 1, open_on_save=False):
         self.make_directories()
+        self.image_count = self.count_images()
 
         self.width = 540 * size_multiplier
         self.height = 480 * size_multiplier
         self.desired = desired
-        self.file_number = self.count_files()
         self.current_run = 1
         self.saved_file_numbers = []
         self.open_on_save = open_on_save
@@ -47,7 +47,7 @@ class Runner(object):
     def setup(self):
         colorMode(HSB, 360, 100, 100, 1.0)
 
-    def count_files(self):
+    def count_images(self):
         dir_list = os.listdir(self.get_cwd() + IMAGE_FOLDER)
         return len(dir_list)
             
@@ -60,7 +60,7 @@ class Runner(object):
                 
         return string_i
 
-    def get_image_name(self, padded_number):
+    def get_image_path(self, padded_number):
         return '{}/{}.png'.format(IMAGE_FOLDER, padded_number)
 
     def commit_changes(self):
@@ -78,7 +78,7 @@ class Runner(object):
     def open_files(self):
         command = 'open'
         for file_number in self.saved_file_numbers:
-            file_name = self.get_image_name(file_number)
+            file_name = self.get_image_path(file_number)
             command += ' {}'.format(file_name)
 
         os.system(command)
@@ -101,9 +101,9 @@ class Runner(object):
                 file.write('NOISE : {}\n\n'.format(noise_seed))
 
     def save_image(self):
-        padded_number = self.get_padded_number(self.file_number + self.current_run) 
+        padded_number = self.get_padded_number(self.image_count + self.current_run)
         self.saved_file_numbers.append(padded_number)
-        saveFrame(self.get_image_name(padded_number))
+        saveFrame(self.get_image_path(padded_number))
 
     def handle_save(self):
         if self.desired > 0:
