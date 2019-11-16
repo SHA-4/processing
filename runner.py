@@ -6,15 +6,26 @@ INT_MAX = 2147483648
 
 class Runner(object):
     def __init__(self, desired, size_multiplier = 1, open_on_save=False):
+        self.make_directories()
+
         self.width = 540 * size_multiplier
         self.height = 480 * size_multiplier
         self.desired = desired
-        self.file_number = None
+        self.file_number = self.count_files()
         self.current_run = 1
         self.saved_file_numbers = []
         self.open_on_save = open_on_save
         self.random_seeds = []
         self.noise_seeds = []
+
+    @staticmethod
+    def get_cwd():
+        return sketchPath("")
+
+    def make_directories(self):
+        has_directory = os.path.exists(self.get_cwd() + IMAGE_FOLDER)
+        if not has_directory:
+            os.mkdir(IMAGE_FOLDER)
 
     def refresh(self):
         background(color(0, 0, 100, 0))
@@ -35,10 +46,6 @@ class Runner(object):
 
     def setup(self):
         colorMode(HSB, 360, 100, 100, 1.0)
-
-    @staticmethod
-    def get_cwd():
-        return sketchPath("") + '/'
 
     def count_files(self):
         dir_list = os.listdir(self.get_cwd() + IMAGE_FOLDER)
@@ -76,12 +83,6 @@ class Runner(object):
 
         os.system(command)
 
-    def make_directories(self):
-        if self.current_run == 1:
-            has_directory = os.path.exists(self.get_cwd() + IMAGE_FOLDER)
-            if not has_directory:
-                os.mkdir(IMAGE_FOLDER)
-
     def save_seeds(self):
         has_associated_image = self.desired > 0
 
@@ -105,16 +106,10 @@ class Runner(object):
         saveFrame(self.get_image_name(padded_number))
 
     def handle_save(self):
-        self.make_directories()
-
-        if self.file_number is None:
-            self.file_number = self.count_files()
-        
-        # save the image
         if self.desired > 0:
             self.save_image()
             self.current_run += 1
-        
+
         # stop drawing
         if self.current_run > self.desired:
             noLoop()
