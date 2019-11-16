@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-IMAGE_FOLDER = "images"
+IMAGE_FOLDER = 'images'
 INT_MAX = 2147483648
 
 class Runner(object):
@@ -20,7 +20,7 @@ class Runner(object):
 
     @staticmethod
     def get_cwd():
-        return sketchPath("")
+        return sketchPath('')
 
     def make_directories(self):
         has_directory = os.path.exists(self.get_cwd() + IMAGE_FOLDER)
@@ -52,7 +52,7 @@ class Runner(object):
         return len(dir_list)
             
     def get_padded_number(self, i, power = 3):
-        string_i = "{}".format(i)
+        string_i = '{}'.format(i)
         
         if i < 10**(power):
             while len(string_i) < (power + 1):
@@ -61,18 +61,18 @@ class Runner(object):
         return string_i
 
     def get_image_name(self, padded_number):
-        return "{}/{}.png".format(IMAGE_FOLDER, padded_number)
+        return '{}/{}.png'.format(IMAGE_FOLDER, padded_number)
 
     def commit_changes(self):
         runner_path = os.path.dirname(__file__)
-        script_path = "{}/handle_commit.sh".format(runner_path)
+        script_path = '{}/handle_commit.sh'.format(runner_path)
         pluralization = '' if self.desired == 1 else 's'
-        commit_message = "{} file{} generated".format(self.desired, pluralization)
+        commit_message = '{} file{} generated'.format(self.desired, pluralization)
 
         if self.desired == 1:
-            commit_message += ", {}".format(self.saved_file_numbers[0])
+            commit_message += ', {}'.format(self.saved_file_numbers[0])
         elif self.desired > 0:
-            commit_message += ", from {} to {}".format(self.saved_file_numbers[0], self.saved_file_numbers[-1])
+            commit_message += ', from {} to {}'.format(self.saved_file_numbers[0], self.saved_file_numbers[-1])
         subprocess.call([script_path, commit_message])
 
     def open_files(self):
