@@ -13,7 +13,7 @@ class Runner(object):
         self.height = 480 * size_multiplier
         self.desired = desired
         self.current_run = 1
-        self.saved_file_numbers = []
+        self.saved_images = []
         self.open_on_save = open_on_save
         self.random_seeds = []
         self.noise_seeds = []
@@ -60,26 +60,27 @@ class Runner(object):
                 
         return string_i
 
-    def get_image_path(self, padded_number):
-        return '{}/{}.png'.format(IMAGE_FOLDER, padded_number)
+    def get_image_path(self, image_name):
+        return '{}/{}'.format(IMAGE_FOLDER, image_name)
 
     def commit_changes(self):
         runner_path = os.path.dirname(__file__)
         script_path = '{}/handle_commit.sh'.format(runner_path)
         pluralization = '' if self.desired == 1 else 's'
-        commit_message = '{} file{} generated'.format(self.desired, pluralization)
+        commit_message = '{} image{} generated'.format(self.desired, pluralization)
 
         if self.desired == 1:
-            commit_message += ', {}'.format(self.saved_file_numbers[0])
+            commit_message += ', {}'.format(self.saved_images[0])
         elif self.desired > 0:
-            commit_message += ', from {} to {}'.format(self.saved_file_numbers[0], self.saved_file_numbers[-1])
+            commit_message += ', from {} to {}'.format(self.saved_images[0], self.saved_images[-1])
         subprocess.call([script_path, commit_message])
 
-    def open_files(self):
+    def open_images(self):
         command = 'open'
-        for file_number in self.saved_file_numbers:
-            file_name = self.get_image_path(file_number)
-            command += ' {}'.format(file_name)
+
+        for image_name in self.saved_images:
+            image_path = self.get_image_path(image_name)
+            command += ' {}'.format(image_path)
 
         os.system(command)
 
@@ -92,7 +93,7 @@ class Runner(object):
                 noise_seed = self.noise_seeds[i]
 
                 if has_associated_image:
-                    image_text = 'IMAGE {}'.format(self.saved_file_numbers[i])
+                    image_text = 'IMAGE {}'.format(self.saved_images[i])
                 else:
                     image_text = 'RUN {}'.format(i)
 
@@ -102,8 +103,9 @@ class Runner(object):
 
     def save_image(self):
         padded_number = self.get_padded_number(self.image_count + self.current_run)
-        self.saved_file_numbers.append(padded_number)
-        saveFrame(self.get_image_path(padded_number))
+        image_name = '{}.png'.format(padded_number)
+        self.saved_images.append(image_name)
+        saveFrame(self.get_image_path(image_name))
 
     def handle_save(self):
         if self.desired > 0:
@@ -117,6 +119,6 @@ class Runner(object):
             self.commit_changes()
 
             if self.open_on_save:
-                self.open_files()
+                self.open_images()
 
             exit()
