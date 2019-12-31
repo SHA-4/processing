@@ -1,15 +1,45 @@
+## Setup
+
+### For the Processing Application
+Copy `runner.py` and `handle_commit.sh` into `libraries/site-packages` inside your Processing directory.
+
+### For Processing in Vim
+Copy `runner.py` and `handle_commit.sh` into `libraries` inside your Processing directory.
+
+You can use `:make` by downloading the Processing JAR file and specifying the following in `~.vim/ftplugin/pyde.vim`: `set makeprg=java\ -jar\ PATH_TO_JAR_FILE\ %`
+
 ## Usage
+Below is a simple example of using Runner. What it does:
+- Generates five new images based on the custom code
+- Saves the images in an `images` folder in the repository
+- Saves the seeds (random and noise) used for each image in a `seeds.txt` file in the repository
+- Initializes a git repository (if necessary), adds all files (including the images, seeds file, and pyde file), and commits everything
+```
+from runner import Runner
 
-In order to use in the Processing application itself, put `runner.py` and `handle_commit.sh` into `libraries/site-packages` inside your processing directory.
+desired_number = 5
+runner = Runner(desired_number)
 
-If running inside of vim, these should be in `libraries`.
+def setup():
+    runner.setup()
+    size(runner.width, runner.height)
 
-You can use :make by specifying putting the following in `~.vim/ftplugin/pyde.vim`: `set makeprg=java\ -jar\ PATH/TO/JAR/FILE\ %`
+def draw():
+    runner.refresh()
+
+    # CUSTOM CODE HERE
+
+    runner.handle_save()
+```
+
+Runner also supports the following arguments:
+- `size_multiplier` - to increase the size of the image from the default 540x480 size ratio
+- `open_on_save` - to open the files that were saved after a run with the `os.open` function
 
 ## Pending
-- Fix flash screen when running from command line
-- Add separate message if code changed in commit or not
+- Add support for custom sizes
+- Add separate commit message if code changed in commit
+- Fix flash screen when running from Vim
 - Call size in setup according to https://processing.org/reference/settings_.html
-  * This is what parses setup: https://github.com/processing/processing/blob/349f413a3fb63a75e0b096097a5b0ba7f5565198/java/src/processing/mode/java/tweak/SketchParser.java
-  * Test monkey patching setup in Runner
+- Remove explicit calls of runner functions
 
