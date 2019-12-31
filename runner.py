@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 
 IMAGE_FOLDER = 'images'
 INT_MAX = 2147483648
@@ -18,9 +19,24 @@ class Runner(object):
         self.random_seeds = []
         self.noise_seeds = []
 
+    @staticmethod
+    def get_cwd():
+        os_dir = os.getcwd()
+
+        # file is an unsaved processing file
+        if os_dir.startswith('/private/var/folders'):
+            return sys.path[2] + '/'
+
+        return ''
+
+    @staticmethod
+    def get_image_directory():
+        return Runner.get_cwd() + IMAGE_FOLDER
+
     def make_directories(self):
-        if not os.path.exists(IMAGE_FOLDER):
-            os.mkdir(IMAGE_FOLDER)
+        image_dir = self.get_image_directory()
+        if not os.path.exists(image_dir):
+            os.mkdir(image_dir)
 
     def refresh(self):
         background(color(0, 0, 100, 0))
@@ -43,7 +59,7 @@ class Runner(object):
         colorMode(HSB, 360, 100, 100, 1.0)
 
     def count_images(self):
-        dir_list = os.listdir(IMAGE_FOLDER)
+        dir_list = os.listdir(self.get_image_directory())
         return len(dir_list)
             
     def get_padded_number(self, i, power = 3):
