@@ -18,13 +18,8 @@ class Runner(object):
         self.random_seeds = []
         self.noise_seeds = []
 
-    @staticmethod
-    def get_cwd():
-        return sketchPath('')
-
     def make_directories(self):
-        has_directory = os.path.exists(self.get_cwd() + IMAGE_FOLDER)
-        if not has_directory:
+        if not os.path.exists(IMAGE_FOLDER):
             os.mkdir(IMAGE_FOLDER)
 
     def refresh(self):
@@ -48,7 +43,7 @@ class Runner(object):
         colorMode(HSB, 360, 100, 100, 1.0)
 
     def count_images(self):
-        dir_list = os.listdir(self.get_cwd() + IMAGE_FOLDER)
+        dir_list = os.listdir(IMAGE_FOLDER)
         return len(dir_list)
             
     def get_padded_number(self, i, power = 3):
